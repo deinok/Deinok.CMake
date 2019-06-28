@@ -15,7 +15,7 @@
 	
 	<Target Name="Configure" AfterTargets="Restore" BeforeTargets="BeforeBuild">
 		<MakeDir Directories="./bin/build" />
-		<Exec Command="cmake -DCMAKE_INSTALL_PREFIX:PATH=$(MSBuildProjectDirectory)/bin/dist -S ./bin/cmake-$(Version) -B ./bin/build" />
+		<Exec Command="cmake -DCMAKE_BUILD_TYPE=$(Configuration) -DCMAKE_INSTALL_PREFIX:PATH=$(MSBuildProjectDirectory)/bin/dist -S ./bin/cmake-$(Version) -B ./bin/build" />
 	</Target>
 	
 	<Target Name="CMakeBuild" AfterTargets="Configure" BeforeTargets="BeforeBuild">
