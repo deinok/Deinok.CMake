@@ -25,6 +25,12 @@
 	<Target Name="Install" AfterTargets="CMakeBuild" BeforeTargets="BeforeBuild">
 		<MakeDir Directories="./bin/dist" />
 		<Exec Command="cmake --build ./bin/build --parallel $(MSBuildNodeCount) --target install" />
+		<ItemGroup>
+			<Content CopyToOutputDirectory="PreserveNewest"
+				Include="$(MSBuildProjectDirectory)/bin/dist/bin/**/*"
+				Pack="true"
+				PackagePath="tools/$(TargetFramework)/$(RuntimeIdentifier)" />
+		</ItemGroup>
 	</Target>
 
 </Project>
