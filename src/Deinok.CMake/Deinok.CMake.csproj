@@ -1,7 +1,30 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<RuntimeIdentifier>linxu-x64</RuntimeIdentifier>
 		<TargetFramework>netstandard2.0</TargetFramework>
+		<Version>3.14.5</Version>
 	</PropertyGroup>
+	
+	<Target Name="AfterRestore" AfterTargets="Restore">
+		<DownloadFile DestinationFolder="./bin" 
+			SourceUrl="https://github.com/Kitware/CMake/releases/download/v$(Version)/cmake-$(Version).zip" />
+		<Exec Command="unzip -o cmake-$(Version).zip" 
+			  WorkingDirectory="./bin" />
+	</Target>
+	
+	<Target Name="Configure" AfterTargets="Restore" BeforeTargets="BeforeBuild">
+		<MakeDir Directories="./bin/build" />
+		<Exec Command="cmake -DCMAKE_INSTALL_PREFIX:PATH=$(MSBuildProjectDirectory)/bin/dist -S ./bin/cmake-$(Version) -B ./bin/build" />
+	</Target>
+	
+	<Target Name="CMakeBuild" AfterTargets="Configure" BeforeTargets="BeforeBuild">
+		<Exec Command="cmake --build ./bin/build --parallel $(MSBuildNodeCount)" />
+	</Target>
+		
+	<Target Name="Install" AfterTargets="CMakeBuild" BeforeTargets="BeforeBuild">
+		<MakeDir Directories="./bin/dist" />
+		<Exec Command="cmake --build ./bin/build --parallel $(MSBuildNodeCount) --target install" />
+	</Target>
 
 </Project>
